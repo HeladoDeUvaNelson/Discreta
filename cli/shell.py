@@ -21,13 +21,22 @@ def shell(stdscr):
     terminal_win.refresh()
 
     command_line_win = curses.newwin(0, 0, root_win_y-3, 0)
+
+    command_line_text_win = curses.newwin(1, root_win_x-6, root_win_y-2, 4)
     # curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)
     # GREEN_AND_BLACK = curses.color_pair(1)
+    command_line_text_win.deleteln()
+    command_line_text_win.refresh()
+
     command_line_win.border()
-    command_line_win_text_box = Textbox(command_line_win)
+    command_line_win_text_box = Textbox(command_line_text_win)
+
     command_line_win.addstr(1, 1, ">> ")
-    command_line_win_text_box.edit(enter_is_terminate)
     command_line_win.refresh()
+
+    command_line_win_text_box.edit(enter_is_terminate)
+    
+    
 
     
 
