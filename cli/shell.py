@@ -1,5 +1,4 @@
 from collections import deque
-# from .commands.commandmap import command_map
 import curses
 from curses import wrapper
 from curses.textpad import Textbox, rectangle
