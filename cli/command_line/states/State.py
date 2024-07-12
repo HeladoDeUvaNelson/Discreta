@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from lombok import Getter, Setter
+from cli.command_line.lombok import Getter, Setter
 
 @Getter
 @Setter

@@ -1,9 +1,9 @@
 from curses import newpad, newwin, initscr, endwin
 import curses
-from lombok import Getter, Setter
-from states.State import State
-from states.CommandInputState import CommandInputState
-from states.ExitState import ExitState
+from .lombok import Getter, Setter
+from .states.State import State
+from .states.CommandInputState import CommandInputState
+from .states.ExitState import ExitState
 
 @Getter
 @Setter
@@ -139,8 +139,8 @@ class CommandLine:
 
 
 
-def shell(stdscr):
-    pad = curses.newpad(3, curses.COLS)
-    commands_line = CommandLine(CommandInputState(), stdscr, pad)
-    commands_line.run()
-curses.wrapper(shell)
+# def shell(stdscr):
+#     pad = curses.newpad(3, curses.COLS)
+#     commands_line = CommandLine(CommandInputState(), stdscr, pad)
+#     commands_line.run()
+# curses.wrapper(shell)
