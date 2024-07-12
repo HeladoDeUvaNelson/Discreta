@@ -20,6 +20,7 @@ class CommandLine:
     _head_pos: int = 0
     _cursor_signal: str = None
     _cursor_signal_yx: tuple = None
+    _root_cursor_signal_yx: tuple = None
     _kwargs = {
         "border": {
             "type": bool,
@@ -31,6 +32,11 @@ class CommandLine:
         self.transition_to(state)
         self.set_root_win(initscr)
         self.set_pad(pad)
+        self.set_cursor_signal(">>", (1, 1))
+        y, x = self.get_pad().getyx()
+        self.set_root_cursor_signal_yx((curses.LINES-2-y, len(self.get_cursor_signal())+2))
+        self.set_head_pos(self.get_root_cursor_signal_yx())
+
         self._validate_execute_kwargs(kwargs)
 
     def transition_to(self, state: State):
@@ -51,10 +57,18 @@ class CommandLine:
         self.get_state().check_command_input()
 
     def add_key(self, key: int) -> None:
-        self.get_keys().append(key)
+        y, x = self.get_head_pos()
+        keys = self.get_keys().insert(x - (self.get_root_cursor_signal_yx()[1]), key)
+        self.set_head_pos((y, x+1))
+        curses.setsyx(y, x+1)
 
     def move_cursor_left(self) -> None:
-        self._raise_exception_error("speed is life")
+        y, x = self.get_head_pos()
+        x -= 1
+        if x >= self.get_root_cursor_signal_yx()[1]:
+            self.set_head_pos((y, x))
+            curses.setsyx(y, x)
+            curses.doupdate()
 
     def refresh_input(self) -> None:
         keys = self.get_keys()
@@ -67,6 +81,10 @@ class CommandLine:
         pad.addstr(y, x, f"{self.get_cursor_signal()} {string}")
 
         self.refresh_pad()
+
+        y, x = self.get_head_pos()
+        curses.setsyx(y, x)
+        curses.doupdate()
         
     def refresh_pad(self) -> None:
         uly, ulx, ulfy, ulfx, ry, rx = self.get_pad_showing_screen()

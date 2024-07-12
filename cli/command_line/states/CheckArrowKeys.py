@@ -12,9 +12,7 @@ class CheckArrowKeys(State):
         key = context.get_input()
         if key == 91:
             key = context.get_input()
-            string = ""
-            for key in context.get_keys(): string += chr(key)
-            if key == 68 and curses.getsyx()[1] > len(f"{context.get_cursor_signal()} {string}"): ##Left arrow
+            if key == 68 and context.get_pad().getyx()[1] > context.get_root_cursor_signal_yx()[1]: ##Left arrow
                 context.move_cursor_left()
                 return context.transition_to(CommandInputState())
 

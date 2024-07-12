@@ -8,14 +8,12 @@ class CheckCommandInputState(State):
         context = self.get_context()
         key = context.get_key()
 
-        context.add_key(key)
-
         keys = context.get_keys()
 
         string = ""
         for key in keys: string += chr(key)
         
-        command = commands.get(string)
+        command = commands.get(string.strip())
         
         if command: return command(self)
 
