@@ -1,6 +1,8 @@
 from .State import State
 from .CheckCommandInputState import CheckCommandInputState
 from .CheckArrowKeys import CheckArrowKeys
+from .DeleteInputKeyState import DeleteInputKeyState
+from .SpaceInputState import SpaceInputState
 
 class CheckCommandInputKeyState(State):
     def command_input(self) -> None:
@@ -23,4 +25,6 @@ class CheckCommandInputKeyState(State):
 commands = {
     10: lambda self: self.get_context().transition_to(CheckCommandInputState()), ## Enter.
     27: lambda self: self.get_context().transition_to(CheckArrowKeys()), ## First arrow key ord.
+    127: lambda self: self.get_context().transition_to(DeleteInputKeyState()),
+    32: lambda self: self.get_context().transition_to(SpaceInputState())
 }

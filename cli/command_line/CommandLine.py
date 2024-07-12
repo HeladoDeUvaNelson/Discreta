@@ -57,10 +57,23 @@ class CommandLine:
         self.get_state().check_command_input()
 
     def add_key(self, key: int) -> None:
-        y, x = self.get_head_pos()
-        keys = self.get_keys().insert(x - (self.get_root_cursor_signal_yx()[1]), key)
-        self.set_head_pos((y, x+1))
-        curses.setsyx(y, x+1)
+        if self.get_head_pos()[1] < self.get_pad_size()[1] - self.get_cursor_signal_yx()[1]-1:
+            y, x = self.get_head_pos()
+            keys = self.get_keys().insert(x - (self.get_root_cursor_signal_yx()[1]), key)
+            self.set_head_pos((y, x+1))
+            curses.setsyx(y, x+1)
+
+    def delete_key(self) -> None:
+        if self.get_head_pos()[1] > self.get_root_cursor_signal_yx()[1]:
+            del self.get_keys()[self.get_head_pos()[1]-self.get_root_cursor_signal_yx()[1]-1]
+            self.move_cursor_left()
+            self.refresh_input()
+            self.get_pad().clrtoeol()
+            
+
+    def space_key(self) -> None:
+        if self.get_head_pos()[1] < self.get_pad_size()[1] - self.get_cursor_signal_yx()[1]-1:
+            self.add_key(32)
 
     def move_cursor_left(self) -> None:
         y, x = self.get_head_pos()
