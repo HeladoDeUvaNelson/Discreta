@@ -11,6 +11,8 @@ class CommandLine:
     _state = None
     _root_win: initscr = None
     _root_win_size: tuple = None
+    _main_win: newwin = None
+    _main_win_size: tuple = None
     _pad: newpad = None
     _pad_size: tuple = None
     _pad_border: bool = True
@@ -28,10 +30,11 @@ class CommandLine:
             }
         }
 
-    def __init__(self, state: State, root_win: initscr, pad: newpad, **kwargs) -> None:
+    def __init__(self, state: State, root_win: initscr, pad: newpad, mainwin: newwin, **kwargs) -> None:
         self.transition_to(state)
         self.set_root_win(initscr)
         self.set_pad(pad)
+        self.set_main_win(mainwin)
         self.set_cursor_signal(">>", (1, 1))
         y, x = self.get_pad().getyx()
         self.set_root_cursor_signal_yx((curses.LINES-2-y, len(self.get_cursor_signal())+2))
@@ -112,6 +115,10 @@ class CommandLine:
         self.get_pad().border() if self.get_pad_border() else "" 
         self.get_pad().refresh(uly, ulx, ulfy, ulfx, ry, rx)
 
+    def refresh_main_win(self) -> None:
+        self.get_main_win().border()
+        self.get_main_win().refresh()
+
     def set_root_win(self, root_win):
         self.set_root_win_size((curses.LINES, curses.COLS))
         self._root_win = root_win
@@ -120,6 +127,10 @@ class CommandLine:
         self.set_pad_size((pad.getmaxyx()[0], pad.getmaxyx()[1]))
         self.set_pad_showing_screen((0, 0, curses.LINES-3, 0, curses.LINES, curses.COLS))
         self._pad = pad
+
+    def set_main_win(self, mainwin):
+        self.set_main_win_size((mainwin.getmaxyx()[0], mainwin.getmaxyx()[1]))
+        self._main_win = mainwin
 
     def set_cursor_signal(self, cursor_signal: str, yx: tuple):
         self._cursor_signal_yx = yx

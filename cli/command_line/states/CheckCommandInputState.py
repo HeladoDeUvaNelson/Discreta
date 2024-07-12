@@ -1,6 +1,6 @@
 from .State import State
 from .ExitState import ExitState
-
+import curses
 class CheckCommandInputState(State):
     def command_input(self) -> None:
         from .CommandInputState import CommandInputState
@@ -16,6 +16,8 @@ class CheckCommandInputState(State):
         command = commands.get(string.strip())
         
         if command: return command(self)
+        context.get_main_win().addstr(1, 2, f"{string}") 
+        context.refresh_main_win()
 
         context.transition_to(CommandInputState())
 
