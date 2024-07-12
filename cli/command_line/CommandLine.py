@@ -70,6 +70,14 @@ class CommandLine:
             curses.setsyx(y, x)
             curses.doupdate()
 
+    def move_cursor_right(self) -> None:
+        y, x = self.get_head_pos()
+        x += 1
+        if x <= self.get_pad().getyx()[1]:
+            self.set_head_pos((y, x))
+            curses.setsyx(y, x)
+            curses.doupdate()
+
     def refresh_input(self) -> None:
         keys = self.get_keys()
         y, x = self.get_cursor_signal_yx()

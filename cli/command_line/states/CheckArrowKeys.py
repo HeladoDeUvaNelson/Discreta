@@ -15,6 +15,9 @@ class CheckArrowKeys(State):
             if key == 68 and context.get_pad().getyx()[1] > context.get_root_cursor_signal_yx()[1]: ##Left arrow
                 context.move_cursor_left()
                 return context.transition_to(CommandInputState())
+            if key == 67 and context.get_pad().getyx()[1] > context.get_root_cursor_signal_yx()[1]: ##Left arrow
+                context.move_cursor_right()
+                return context.transition_to(CommandInputState())
 
         context.transition_to(CommandInputState())
 
