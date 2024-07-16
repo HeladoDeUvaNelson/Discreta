@@ -12,5 +12,3 @@ def shell(stdscr):
 
     commands_line = CommandLine(CommandInputState(), stdscr, pad, main_win)
     commands_line.run()
-    
-curses.wrapper(shell)
