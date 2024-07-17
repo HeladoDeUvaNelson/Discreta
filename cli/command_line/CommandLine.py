@@ -64,7 +64,7 @@ class CommandLine:
         y, x = self.get_head_pos()
         keys = self.get_keys().insert(x - (self.get_root_cursor_signal_yx()[1]), key)
         self.set_head_pos((y, x+1))
-        curses.setsyx(y, x+1)
+        self.refresh_cursor_pos(self.get_head_pos(), False)
 
     def delete_key(self) -> None:
         if self.get_head_pos()[1] > self.get_root_cursor_signal_yx()[1]:
@@ -83,16 +83,14 @@ class CommandLine:
         x -= 1
         if x >= self.get_root_cursor_signal_yx()[1]:
             self.set_head_pos((y, x))
-            curses.setsyx(y, x)
-            curses.doupdate()
+            self.refresh_cursor_pos(self.get_head_pos())
 
     def move_cursor_right(self) -> None:
         y, x = self.get_head_pos()
         x += 1
         if x <= self.get_pad().getyx()[1]:
             self.set_head_pos((y, x))
-            curses.setsyx(y, x)
-            curses.doupdate()
+            self.refresh_cursor_pos(self.get_head_pos())
 
     def refresh_input(self) -> None:
         keys = self.get_keys()
@@ -110,10 +108,13 @@ class CommandLine:
 
         self.refresh_pad()
 
-        y, x = self.get_head_pos()
-        curses.setsyx(y, x)
-        curses.doupdate()
+        self.refresh_cursor_pos(self.get_head_pos())
         
+    def refresh_cursor_pos(self, yx: tuple, update: bool=True) -> None:
+        y, x = yx
+        curses.setsyx(y, x)
+        if update: curses.doupdate()
+
     def refresh_pad(self) -> None:
         uly, ulx, ulfy, ulfx, ry, rx = self.get_pad_showing_screen()
         self.get_pad().border() if self.get_pad_border() else "" 
